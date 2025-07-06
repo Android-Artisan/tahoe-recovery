@@ -19,14 +19,13 @@ jobs:
         run: |
           sudo installer -pkg /tmp/InstallAssistant.pkg -target /
           ls -l /Applications | grep 'Install'
-          ls -l /Applications/Install\ macOS\ Beta.app/Contents/Resources/createinstallmedia
           
       - name: Generate macOS Installer
         run: |
           sudo hdiutil create -o /tmp/Tahoe -size 20000m -volname 'Tahoe' -layout SPUD -fs HFS+J
           sudo hdiutil attach /tmp/Tahoe.dmg -noverify -mountpoint /Volumes/Tahoe
           sleep 10
-          sudo /Applications/'Install macOS Beta'.app/Contents/Resources/createinstallmedia --volume /Volumes/Tahoe --nointeraction
+          sudo /Applications/'Install macOS Tahoe Beta'.app/Contents/Resources/createinstallmedia --volume /Volumes/Tahoe --nointeraction
           sleep 60
 
       - name: Upload file to Flask server
