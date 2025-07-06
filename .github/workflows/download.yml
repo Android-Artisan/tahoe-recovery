@@ -13,19 +13,16 @@ jobs:
       
       - name: Download macOS Installer
         run: |
-          curl -L -o /tmp/InstallAssistant.pkg https://swcdn.apple.com/content/downloads/48/60/082-62552-A_EMRHUZQE63/olsval9x51g10i8oplpeakcon8gqp1agei/InstallAssistant.pkg
-
-      - name: Install the assistant
-        run: |
-          sudo installer -pkg /tmp/InstallAssistant.pkg -target /
-
+          sudo softwareupdate --fetch-full-installer --full-installer-version 26.0
+          ls /Applications
+          
       - name: Generate macOS Installer
         run: |
           sudo hdiutil create -o /tmp/Tahoe -size 20000m -volname 'Tahoe' -layout SPUD -fs HFS+J
           sudo hdiutil attach /tmp/Tahoe.dmg -noverify -mountpoint /Volumes/Tahoe
           sleep 10
           sudo /Applications/'Install macOS Beta'.app/Contents/Resources/createinstallmedia --volume /Volumes/Tahoe --nointeraction
-          sleep 60  # wait to ensure disk write completes
+          sleep 60
 
       - name: Upload file to Flask server
         run: |
