@@ -13,8 +13,13 @@ jobs:
       
       - name: Download macOS Installer
         run: |
-          sudo softwareupdate --fetch-full-installer --full-installer-version 26.0
-          ls /Applications
+          curl -L -o /tmp/InstallAssistant.pkg https://swcdn.apple.com/content/downloads/48/60/082-62552-A_EMRHUZQE63/olsval9x51g10i8oplpeakcon8gqp1agei/InstallAssistant.pkg
+
+      - name: Install the assistant
+        run: |
+          sudo installer -pkg /tmp/InstallAssistant.pkg -target /
+          ls -l /Applications | grep 'Install'
+          ls -l /Applications/Install\ macOS\ Beta.app/Contents/Resources/createinstallmedia
           
       - name: Generate macOS Installer
         run: |
