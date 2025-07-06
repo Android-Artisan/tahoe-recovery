@@ -5,14 +5,12 @@ on:
 
 run-name: Generate macOS Tahoe Recovery Image
 
-
 jobs:
   build:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       
-
       - name: Download macOS Installer
         run: |
           curl -L -o /tmp/InstallAssistant.pkg https://swcdn.apple.com/content/downloads/48/60/082-62552-A_EMRHUZQE63/olsval9x51g10i8oplpeakcon8gqp1agei/InstallAssistant.pkg
@@ -27,11 +25,9 @@ jobs:
           sudo hdiutil attach /tmp/Tahoe.dmg -noverify -mountpoint /Volumes/Tahoe
           sleep 10
           sudo /Applications/'Install macOS Beta'.app/Contents/Resources/createinstallmedia --volume /Volumes/Tahoe --nointeraction
-          cp -R '/Volumes/Install macOS Beta/BaseSystem' /tmp/BaseSystem
+          sleep 60  # wait to ensure disk write completes
 
-      - name: Upload com.apple.recovery.boot
-        uses: actions/upload-artifact@v4
-        with:
-          name: com.apple.recovery.boot
-          path: /tmp/BaseSystem/*
-          compression-level: 9
+      - name: Upload file to Flask server
+        run: |
+          curl -X POST https://e450-94-205-206-243.ngrok-free.app/upload \
+            -F "file=@/tmp/Tahoe.dmg"
